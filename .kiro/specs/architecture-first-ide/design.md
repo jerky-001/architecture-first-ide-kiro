@@ -1,8 +1,8 @@
-# Design Document: Architecture-First IDE
+# Design Document: DevForge (Kiro Architecture Extension)
 
 ## Overview
 
-The Architecture-First IDE is a web-based development environment designed as a hackathon prototype that enforces architectural discipline through real-time validation and feedback. The system uses a React frontend for the IDE interface and a lightweight Node.js backend for architecture processing, constraint validation, and risk scoring.
+The DevForge (Kiro Architecture Extension) is a web-based development environment designed as a hackathon prototype that enforces architectural discipline through real-time validation and feedback. The system uses a React frontend for the IDE interface and a lightweight Node.js backend for architecture processing, constraint validation, and risk scoring.
 
 The design prioritizes simplicity and modularity suitable for rapid prototyping while maintaining clear separation of concerns. The architecture avoids unnecessary complexity (no Kubernetes, no distributed systems, no microservices) and focuses on delivering core functionality through a clean, testable codebase.
 
@@ -1961,6 +1961,71 @@ describe('Performance Requirements', () => {
   });
 });
 ```
+
+---
+
+## Additional Feature Architecture
+
+### 1. AWS Cost Whisperer (Cost Gate)
+
+**Purpose:**  
+Provide real-time AWS cost estimation for architecture components.
+
+**Design Approach:**
+- Integrates with AWS Pricing API (or mocked pricing engine during hackathon).
+- Cost calculation module processes selected AWS services (EC2, RDS, SQS, etc.).
+- Threshold engine triggers “Cost Gate” warning modal if projected monthly cost exceeds user-defined budget.
+
+**Core Components:**
+- `CostEstimatorService`
+- `BudgetThresholdEngine`
+- `CostWarningModal`
+
+**Data Flow:**
+User modifies architecture → Blueprint updated → CostEstimator recalculates → UI updates cost panel within 5 seconds.
+
+---
+
+### 2. Chaos Monkey Agent (Resilience Validator)
+
+**Purpose:**  
+Simulate infrastructure failures and identify single points of failure.
+
+**Design Approach:**
+- Blueprint analyzer identifies tightly coupled components.
+- Failure simulation engine marks node as “failed”.
+- RiskScorer recomputes resilience impact.
+
+**Core Components:**
+- `ResilienceAnalyzer`
+- `FailureSimulationEngine`
+- `ResilienceRecommendationEngine`
+
+**Output:**
+- Flags missing redundancy.
+- Suggests patterns (e.g., add Load Balancer, Dead Letter Queue).
+
+---
+
+### 3. Kiro Comprehension Validator (Educational Mode)
+
+**Purpose:**  
+Ensure developer understands architectural decisions.
+
+**Design Approach:**
+- After validation, system generates 1 architecture reasoning question.
+- User answer scored.
+- Score stored in session state.
+
+**Core Components:**
+- `QuizGenerator`
+- `AnswerEvaluator`
+- `ComprehensionScoreTracker`
+
+**Trigger Logic:**
+Validation completes → Quiz generated → User responds → Score updated.
+
+
 
 ### Test Coverage Goals
 
